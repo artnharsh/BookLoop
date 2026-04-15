@@ -1,0 +1,99 @@
+Backend (/backend)
+Plaintext
+backend/
+├── config/
+│   └── db.js              # MongoDB connection
+├── controllers/
+│   ├── authController.js  # Registration, Login
+│   ├── listingController.js # CRUD for books, Search logic
+│   ├── messageController.js # Chat history
+│   ├── userController.js  # Wishlist, Profile, Ratings
+│   └── adminController.js # Platform analytics, User/Listing moderation
+├── middleware/
+│   ├── authMiddleware.js  # JWT check for logged-in users
+│   ├── adminMiddleware.js # Checks if user.role === 'admin'
+│   └── uploadMiddleware.js# Multer for local image uploads
+├── models/
+│   ├── User.js            # Includes wishlist array, role (student/admin)
+│   ├── Listing.js         # Book details, status (active/sold)
+│   ├── Message.js         # Sender, receiver, content
+│   └── Rating.js          # Score, comment, rater, seller
+├── routes/
+│   ├── authRoutes.js      
+│   ├── listingRoutes.js   
+│   ├── messageRoutes.js
+│   ├── userRoutes.js      # Handles /wishlist and /rate
+│   └── adminRoutes.js     # Protected admin-only routes
+├── sockets/
+│   └── chatSocket.js      # Real-time messaging
+├── uploads/               # Book images saved here
+├── .env                   
+├── package.json
+└── server.js              
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── common/        
+│   │   │   ├── Navbar.jsx       # Top nav for public pages (Landing/Auth)
+│   │   │   ├── Sidebar.jsx      # Left nav for the in-app dashboard
+│   │   │   ├── DashboardLayout.jsx # Wrapper for bento-box layout
+│   │   │   └── ThemeToggle.jsx  # Sun/Moon button
+│   │   ├── listings/      
+│   │   │   ├── ListingCard.jsx  # Bento-box style card
+│   │   │   └── FilterSidebar.jsx 
+│   │   └── chat/          
+│   │       └── ChatWindow.jsx   # Glassmorphic chat UI
+│   ├── context/
+│   │   ├── AuthContext.jsx
+│   │   └── ThemeContext.jsx
+│   ├── pages/
+│   │   ├── Login.jsx      
+│   │   ├── Register.jsx   
+│   │   ├── Home.jsx       
+│   │   ├── CreateListing.jsx 
+│   │   ├── BookDetails.jsx 
+│   │   ├── Profile.jsx    
+│   │   ├── Wishlist.jsx   
+│   │   └── AdminDashboard.jsx 
+│   ├── App.jsx            
+│   ├── index.css          
+│   └── main.jsx           
+├── .env                   
+├── package.json
+└── tailwind.config.js
+The 10-Step Execution Plan
+Here is your blueprint. We will build the backend completely first, test it, and then build the frontend on top of it.
+
+Phase 1: Backend (Node.js, Express, MongoDB)
+Step 1: Foundation & Database Models
+
+What I will give you: server.js, config/db.js, and the 4 Mongoose Schemas (User.js, Listing.js, Message.js, Rating.js). This sets up your database structure.
+
+Step 2: Authentication System
+
+What I will give you: authController.js, authRoutes.js, and authMiddleware.js. This handles secure registration (enforcing college emails) and login using JWT.
+
+Step 3: Core Listings & Local Image Uploads
+
+What I will give you: uploadMiddleware.js (Multer), listingController.js (Create, Read, Update, Delete), and listingRoutes.js. This allows the app to accept textbook data and save images locally.
+
+Step 4: Advanced Search, Wishlist & Ratings
+
+What I will give you: Complex search logic in listingController.js (regex, price filters), plus userController.js and userRoutes.js for adding books to the Wishlist and leaving Ratings.
+
+Step 5: Admin Panel & Real-Time Messaging
+
+What I will give you: adminMiddleware.js, adminController.js, adminRoutes.js (for analytics and moderation), plus chatSocket.js, messageController.js, and messageRoutes.js for Socket.io chat functionality.
+
+Phase 2: Frontend (React.js, Tailwind CSS)
+Step 6: Frontend Scaffold & Global State
+
+What I will give you: App.jsx (Routing), main.jsx, Tailwind configuration, and the AuthContext.jsx to manage the logged-in user across the app.
+
+Step 7: Auth UI & Public Navigation: ThemeToggle.jsx, Navbar.jsx, Login.jsx, and Register.jsx. We will use the light/airy design here.
+
+Step 8: The Bento-Box Scaffold & Discovery: Sidebar.jsx, DashboardLayout.jsx, Home.jsx, and ListingCard.jsx. We switch to the dark, glassmorphic grid here.
+
+Step 9: Listing Interactions & Creation: CreateListing.jsx and BookDetails.jsx.
+
+Step 10: The User Ecosystem: ChatWindow.jsx, Wishlist.jsx, Profile.jsx, and AdminDashboard.jsx.

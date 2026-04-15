@@ -1,0 +1,37 @@
+const multer = require('multer');
+const path = require('path');
+
+// Configure storage destination and filename
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, 'uploads/'); // Make sure this folder exists in your backend root!
+  },
+  filename(req, file, cb) {
+    // Format: fieldname-timestamp.ext (e.g., image-1678901234.jpg)
+    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+  }
+});
+
+// Check file type to ensure it's an image
+function checkFileType(file, cb) {
+  const filetypes = /jpg|jpeg|png/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    return cb(null, true);
+  } else {
+    cb('Error: Images Only (jpg, jpeg, png)!');
+  }
+}
+
+// Initialize multer upload object
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit per image
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  }
+});
+
+module.exports = upload;
