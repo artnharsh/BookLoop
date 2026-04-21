@@ -9,8 +9,17 @@ const Listing = require('../models/Listing');
  */
 const addToWishlist = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
     const listingId = req.params.listingId;
+
+    if (!listingId || !listingId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: 'Invalid listing id' });
+    }
+
+    const user = await User.findById(req.user._id).select('_id');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
     // Check if listing exists
     const listingExists = await Listing.findById(listingId);
@@ -18,16 +27,23 @@ const addToWishlist = async (req, res) => {
       return res.status(404).json({ message: 'Listing not found' });
     }
 
-    // Check if already in wishlist
-    if (user.wishlist.includes(listingId)) {
+    if (listingExists.seller.toString() === req.user._id.toString()) {
+      return res.status(400).json({ message: 'You cannot wishlist your own listing' });
+    }
+
+    const updateResult = await User.updateOne(
+      { _id: req.user._id, wishlist: { $ne: listingId } },
+      { $addToSet: { wishlist: listingId } }
+    );
+
+    if (updateResult.modifiedCount === 0) {
       return res.status(400).json({ message: 'Item already in wishlist' });
     }
 
-    user.wishlist.push(listingId);
-    await user.save();
-
-    res.json({ message: 'Added to wishlist', wishlist: user.wishlist });
+    const updatedUser = await User.findById(req.user._id).select('wishlist');
+    res.json({ message: 'Added to wishlist', wishlist: updatedUser?.wishlist || [] });
   } catch (error) {
+    console.error('addToWishlist error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -39,16 +55,27 @@ const addToWishlist = async (req, res) => {
  */
 const removeFromWishlist = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
-    
-    user.wishlist = user.wishlist.filter(
-      (id) => id.toString() !== req.params.listingId
-    );
-    
-    await user.save();
+    const listingId = req.params.listingId;
 
-    res.json({ message: 'Removed from wishlist', wishlist: user.wishlist });
+    if (!listingId || !listingId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: 'Invalid listing id' });
+    }
+
+    const user = await User.findById(req.user._id).select('_id');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    await User.updateOne(
+      { _id: req.user._id },
+      { $pull: { wishlist: listingId } }
+    );
+
+    const updatedUser = await User.findById(req.user._id).select('wishlist');
+    res.json({ message: 'Removed from wishlist', wishlist: updatedUser?.wishlist || [] });
   } catch (error) {
+    console.error('removeFromWishlist error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -65,8 +92,13 @@ const getWishlist = async (req, res) => {
       populate: { path: 'seller', select: 'name' }
     });
 
-    res.json(user.wishlist);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(Array.isArray(user.wishlist) ? user.wishlist : []);
   } catch (error) {
+    console.error('getWishlist error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

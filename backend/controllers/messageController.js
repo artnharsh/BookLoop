@@ -1,6 +1,61 @@
 const Message = require('../models/Message');
 
 /**
+ * @desc    Get conversation list for current user
+ * @route   GET /api/messages/conversations
+ * @access  Private
+ */
+const getConversations = async (req, res) => {
+  try {
+    const userId = req.user._id.toString();
+
+    const messages = await Message.find({
+      $or: [{ sender: req.user._id }, { receiver: req.user._id }]
+    })
+      .populate('sender', 'name')
+      .populate('receiver', 'name')
+      .populate('listing', 'title images price courseCode')
+      .sort({ createdAt: 1 });
+
+    const conversationMap = new Map();
+
+    messages.forEach((msg) => {
+      if (!msg.listing || !msg.sender || !msg.receiver) {
+        return;
+      }
+
+      const senderId = msg.sender._id.toString();
+      const receiverId = msg.receiver._id.toString();
+      const otherUser = senderId === userId ? msg.receiver : msg.sender;
+      const key = `${msg.listing._id.toString()}_${otherUser._id.toString()}`;
+
+      if (!conversationMap.has(key)) {
+        conversationMap.set(key, {
+          listing: msg.listing,
+          otherUser,
+          firstMessageDirection: senderId === userId ? 'sent' : 'received',
+          lastMessage: msg,
+          updatedAt: msg.createdAt,
+        });
+      } else {
+        const existing = conversationMap.get(key);
+        existing.lastMessage = msg;
+        existing.updatedAt = msg.createdAt;
+        conversationMap.set(key, existing);
+      }
+    });
+
+    const conversations = Array.from(conversationMap.values()).sort(
+      (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+    );
+
+    res.json(conversations);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching conversations', error: error.message });
+  }
+};
+
+/**
  * @desc    Send a new message
  * @route   POST /api/messages
  * @access  Private
@@ -37,12 +92,24 @@ const sendMessage = async (req, res) => {
  */
 const getMessages = async (req, res) => {
   try {
-    // Find messages where the current listing is matched, 
-    // AND the current user is either the sender OR the receiver
-    const messages = await Message.find({
+    const { userId } = req.query;
+    const baseQuery = {
       listing: req.params.listingId,
       $or: [{ sender: req.user._id }, { receiver: req.user._id }]
-    })
+    };
+
+    if (userId) {
+      baseQuery.$and = [
+        {
+          $or: [
+            { sender: req.user._id, receiver: userId },
+            { sender: userId, receiver: req.user._id }
+          ]
+        }
+      ];
+    }
+
+    const messages = await Message.find(baseQuery)
       .populate('sender', 'name')
       .populate('receiver', 'name')
       .sort({ createdAt: 1 }); // Oldest first for chat UI
@@ -53,4 +120,4 @@ const getMessages = async (req, res) => {
   }
 };
 
-module.exports = { sendMessage, getMessages };
+module.exports = { sendMessage, getMessages, getConversations };

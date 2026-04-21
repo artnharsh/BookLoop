@@ -14,14 +14,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body[data-theme='dark'] {
-  background:
-    radial-gradient(circle at top left, rgba(52, 211, 153, 0.12), transparent 30%),
-    radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 28%),
-    linear-gradient(180deg, #07111f 0%, #050b14 100%);
-  color: rgb(226, 232, 240);
-}
-
 @layer utilities {
   /* For the light theme landing page */
   .glass-light {
@@ -31,14 +23,6 @@ body[data-theme='dark'] {
     box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
   }
   
-  /* For the dark theme bento-box dashboard */
-  .glass-dark {
-    background: rgba(2, 6, 23, 0.55);
-    backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-  }
-
   /* Smooth transition for theme toggling */
   body {
     transition: background-color 300ms ease-in-out, color 300ms ease-in-out;

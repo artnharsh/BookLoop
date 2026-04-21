@@ -27,20 +27,20 @@ const Profile = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
         
         {/* Identity Bento Box */}
-        <div className="p-8 rounded-[2rem] glass-light dark:glass-dark flex flex-col items-center text-center">
+        <div className="p-8 rounded-[2rem] glass-light flex flex-col items-center text-center">
           <div className="w-24 h-24 rounded-full bg-brand-accent/20 flex items-center justify-center text-4xl mb-4">
             👤
           </div>
           <h2 className="text-2xl font-bold">{user.name}</h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-4">{user.college}</p>
-          <div className="w-full pt-4 border-t border-gray-200 dark:border-white/10 mt-4">
+          <p className="text-gray-500 mb-4">{user.college}</p>
+          <div className="w-full pt-4 border-t border-gray-200 mt-4">
              <p className="text-sm text-gray-500 mb-1">Email</p>
              <p className="font-medium">{user.email}</p>
           </div>
         </div>
 
         {/* My Listings Bento Box */}
-        <div className="lg:col-span-2 p-8 rounded-[2rem] glass-light dark:glass-dark flex flex-col overflow-hidden">
+        <div className="lg:col-span-2 p-8 rounded-[2rem] glass-light flex flex-col overflow-hidden">
           <h3 className="text-2xl font-bold mb-6">My Active Listings</h3>
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             {myListings.length > 0 ? (

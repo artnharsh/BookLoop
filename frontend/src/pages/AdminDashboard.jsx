@@ -49,31 +49,31 @@ const AdminDashboard = () => {
 
         {/* Analytics Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="p-6 rounded-3xl glass-light dark:glass-dark">
+          <div className="p-6 rounded-3xl glass-light">
             <p className="text-sm text-gray-500 mb-2">Total Students</p>
             <p className="text-4xl font-black">{stats.totalUsers || 0}</p>
           </div>
-          <div className="p-6 rounded-3xl glass-light dark:glass-dark">
+          <div className="p-6 rounded-3xl glass-light">
             <p className="text-sm text-gray-500 mb-2">Active Listings</p>
             <p className="text-4xl font-black text-blue-500">{stats.activeListings || 0}</p>
           </div>
-          <div className="p-6 rounded-3xl glass-light dark:glass-dark">
+          <div className="p-6 rounded-3xl glass-light">
             <p className="text-sm text-gray-500 mb-2">Books Exchanged</p>
             <p className="text-4xl font-black text-brand-accent">{stats.soldListings || 0}</p>
           </div>
-          <div className="p-6 rounded-3xl glass-light dark:glass-dark">
+          <div className="p-6 rounded-3xl glass-light">
             <p className="text-sm text-gray-500 mb-2">Estimated Savings</p>
             <p className="text-4xl font-black text-green-500">{stats.estimatedPlatformSavings || '₹0'}</p>
           </div>
         </div>
 
         {/* User Management */}
-        <div className="p-8 rounded-[2rem] glass-light dark:glass-dark flex-1">
+        <div className="p-8 rounded-[2rem] glass-light flex-1">
           <h2 className="text-2xl font-bold mb-6">User Management</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-white/10">
+                <tr className="border-b border-gray-200">
                   <th className="p-4 font-medium text-gray-500">Name</th>
                   <th className="p-4 font-medium text-gray-500">Email</th>
                   <th className="p-4 font-medium text-gray-500">College</th>
@@ -83,7 +83,7 @@ const AdminDashboard = () => {
               </thead>
               <tbody>
                 {users.map(u => (
-                  <tr key={u._id} className="border-b border-gray-100 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                  <tr key={u._id} className="border-b border-gray-100 hover:bg-black/5 transition-colors">
                     <td className="p-4 font-bold">{u.name}</td>
                     <td className="p-4">{u.email}</td>
                     <td className="p-4 text-sm">{u.college}</td>

@@ -1,1 +1,38 @@
-nothing yet
+# Node modules (frontend + backend + any nested)
+node_modules/
+**/node_modules/
+
+# Environment files
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor folders
+.vscode/
+.idea/
+
+# Optional: lockfiles (uncomment if you DON'T want them tracked)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml

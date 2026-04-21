@@ -7,6 +7,10 @@ const Wishlist = () => {
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const handleWishlistRemoved = (listingId) => {
+    setWishlist((prevWishlist) => prevWishlist.filter((item) => item._id !== listingId));
+  };
+
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
@@ -23,13 +27,13 @@ const Wishlist = () => {
 
   return (
     <DashboardLayout>
-      <div className="w-full p-8 rounded-[2rem] glass-light dark:glass-dark mb-6 shrink-0 relative overflow-hidden mt-4">
+      <div className="w-full p-8 rounded-[2rem] glass-light mb-6 shrink-0 relative overflow-hidden mt-4">
          <div className="absolute -right-10 -top-10 w-48 h-48 bg-yellow-500/20 rounded-full blur-3xl"></div>
          <h1 className="text-3xl font-bold mb-2 relative z-10">Your Wishlist</h1>
-         <p className="text-gray-500 dark:text-gray-400 relative z-10">Books you are keeping an eye on.</p>
+         <p className="text-gray-500 relative z-10">Books you are keeping an eye on.</p>
       </div>
 
-      <div className="flex-1 p-8 rounded-[2rem] glass-light dark:glass-dark overflow-y-auto">
+      <div className="flex-1 p-8 rounded-[2rem] glass-light overflow-y-auto">
         {loading ? (
           <div className="flex justify-center items-center h-full min-h-[300px]">
              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-accent"></div>
@@ -37,7 +41,12 @@ const Wishlist = () => {
         ) : wishlist.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {wishlist.map(listing => (
-              <ListingCard key={listing._id} listing={listing} />
+              <ListingCard
+                key={listing._id}
+                listing={listing}
+                enableRemoveWishlistAction
+                onWishlistRemoved={handleWishlistRemoved}
+              />
             ))}
           </div>
         ) : (

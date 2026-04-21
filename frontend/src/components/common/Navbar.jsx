@@ -1,7 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -14,13 +13,12 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 px-6 py-4 transition-all">
-      <div className="max-w-7xl mx-auto glass-light dark:glass-dark rounded-full px-6 py-3 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold tracking-tighter text-gray-900 dark:text-slate-50 flex items-center gap-2">
+      <div className="max-w-7xl mx-auto glass-light rounded-full px-6 py-3 flex justify-between items-center">
+        <Link to="/" className="text-2xl font-bold tracking-tighter text-gray-900 flex items-center gap-2">
           <span className="text-brand-accent">✦</span> BOOKLOOP
         </Link>
         
         <div className="flex items-center gap-4">
-          <ThemeToggle />
           {user ? (
             <>
               <Link to="/" className="text-sm font-medium hover:text-brand-accent transition-colors">Dashboard</Link>
@@ -31,7 +29,7 @@ const Navbar = () => {
           ) : (
             <>
               <Link to="/login" className="text-sm font-medium hover:text-brand-accent transition-colors">Log In</Link>
-              <Link to="/register" className="px-5 py-2 text-sm font-medium rounded-full bg-gray-900 text-white dark:bg-slate-50 dark:text-slate-900 hover:scale-105 transition-transform">
+              <Link to="/register" className="px-5 py-2 text-sm font-medium rounded-full bg-gray-900 text-white hover:scale-105 transition-transform">
                 Sign Up
               </Link>
             </>

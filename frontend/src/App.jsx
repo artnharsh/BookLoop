@@ -5,6 +5,7 @@ import { AuthContext } from './context/AuthContext';
 // Pages
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Landing from './pages/Landing';
 import Home from './pages/Home';
 import CreateListing from './pages/CreateListing';
 import BookDetails from './pages/BookDetails';
@@ -19,7 +20,7 @@ const ProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-light dark:bg-brand-dark text-gray-900 dark:text-slate-100 transition-colors duration-300">
+      <div className="min-h-screen flex items-center justify-center bg-brand-light text-gray-900 transition-colors duration-300">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-accent"></div>
       </div>
     );
@@ -29,24 +30,27 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-brand-light text-gray-900 transition-colors duration-300">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-accent"></div>
+      </div>
+    );
+  }
+
   return (
     <Router>
-      <div className="min-h-screen bg-brand-light dark:bg-brand-dark text-gray-900 dark:text-slate-100 transition-colors duration-300">
+      <div className="min-h-screen bg-brand-light text-gray-900 transition-colors duration-300">
         <Routes>
           {/* Public Routes (Airy, light design) */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
+          <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />
+
+          <Route path="/" element={user ? <Home /> : <Landing />} />
 
           {/* Protected Routes (Bento-box Dashboard design) */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-
           <Route
             path="/create-listing"
             element={
